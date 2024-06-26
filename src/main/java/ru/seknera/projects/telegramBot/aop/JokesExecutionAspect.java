@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 @Component
 @Aspect
 public class JokesExecutionAspect {
-    @Pointcut("execution(public * ru.seknera.projects.telegramBot.controller.placeOrder(..))")
-    public void callOrderPlace() {}
+    @Pointcut("execution(public * ru.seknera.projects.telegramBot.controller.addJokeModel(..))")
+    public void callJokesAdd() {}
 
     @Around("callJokesAdd()")
     public Object aroundJokesAdd(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
