@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.seknera.projects.telegramBot.model.JokeModel;
 import ru.seknera.projects.telegramBot.repository.JokeRepository;
@@ -16,8 +19,8 @@ public class JokeServiceImpl implements JokeService {
     private final JokeRepository jokeRepository;
 
     @Override
-    public List<JokeModel> getAllJokeModels() {
-        return jokeRepository.getJokeModelsBy();
+    public Page<JokeModel> getAllJokeModels(Pageable pageable) {
+        return jokeRepository.findAll(pageable);
     }
 
     @Override
@@ -49,4 +52,14 @@ public class JokeServiceImpl implements JokeService {
     public void deleteJokeModelById(Long id) {
         jokeRepository.deleteById(id);
     }
-}
+
+    @Override
+    public List<JokeModel> getTop5Jokes() {
+        Pageable pageable = PageRequest.of(0, 5); // Запрашиваем первую страницу с 5 элементами
+        return jokeRepository.findTop5Jokes(pageable).getContent();
+    }
+
+    @Override
+    public Optional<JokeModel> getRandomJoke() {
+        return Optional.ofNullable(jokeRepository.findRandomJoke());
+    }}

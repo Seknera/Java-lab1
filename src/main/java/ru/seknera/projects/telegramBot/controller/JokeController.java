@@ -2,6 +2,9 @@ package ru.seknera.projects.telegramBot.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.seknera.projects.telegramBot.service.JokeService;
@@ -24,8 +27,8 @@ public class JokeController {
 
     // GET /jokes
     @GetMapping
-    ResponseEntity<List<JokeModel>> getAllJokeModels() {
-        return ResponseEntity.ok(jokeService.getAllJokeModels());
+    ResponseEntity<Page<JokeModel>> getAllJokeModels(Pageable pageable) {
+        return ResponseEntity.ok(jokeService.getAllJokeModels(pageable));
     }
 
     // GET /jokes/id
@@ -53,6 +56,19 @@ public class JokeController {
     ResponseEntity<Void> deleteJokeModel(@PathVariable("id") Long id) {
         jokeService.deleteJokeModelById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // GET /jokes/top5
+    @GetMapping("/top5")
+    ResponseEntity<List<JokeModel>> getTop5Jokes() {
+        return ResponseEntity.ok(jokeService.getTop5Jokes());
+    }
+
+    // GET /jokes/random
+    @GetMapping("/random")
+    public ResponseEntity<JokeModel> getRandomJoke() {
+        Optional<JokeModel> joke = jokeService.getRandomJoke();
+        return joke.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
 }
